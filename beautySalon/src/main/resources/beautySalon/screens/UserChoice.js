@@ -1,6 +1,7 @@
 import {StyleSheet, Text, View, ImageBackground, TouchableOpacity} from 'react-native';
 import {green} from "../help/Colors";
 import Appointment from "./Appointment";
+import Team from "./Team";
 
 export default function UserChoice({navigation}) {
     return (
@@ -16,7 +17,7 @@ export default function UserChoice({navigation}) {
                     <Text style={userChoiceStyles.buttonText}>make an appointment</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => navigation.navigate(Appointment)} style={userChoiceStyles.button}>
+                <TouchableOpacity onPress={() => navigation.navigate(Team)} style={userChoiceStyles.button}>
                     <Text style={userChoiceStyles.buttonText}>see our team</Text>
                 </TouchableOpacity>
 
