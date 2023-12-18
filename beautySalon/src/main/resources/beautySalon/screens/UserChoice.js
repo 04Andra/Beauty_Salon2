@@ -2,6 +2,7 @@ import {StyleSheet, Text, View, ImageBackground, TouchableOpacity} from 'react-n
 import {green} from "../help/Colors";
 import Appointment from "./Appointment";
 import Team from "./Team";
+import SeeAppointment from "./SeeAppointment";
 
 export default function UserChoice({navigation}) {
     return (
@@ -21,7 +22,7 @@ export default function UserChoice({navigation}) {
                     <Text style={userChoiceStyles.buttonText}>see our team</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => navigation.navigate(Appointment)} style={userChoiceStyles.button}>
+                <TouchableOpacity onPress={() => navigation.navigate(SeeAppointment)} style={userChoiceStyles.button}>
                     <Text style={userChoiceStyles.buttonText}>enter as a coworker</Text>
                 </TouchableOpacity>
 

@@ -21,13 +21,13 @@ public class Stock {
     private double quantity;
     private double price;
 
-    @Override
-    public String toString() {
-        return "{" +
-                "\"id\":\"" + id + "\"" +
-                ", \"name\": \"" + name + '\"' +
-                ", \"quantity\": \"" + quantity + "\"" +
-                ", \"price\": \"" + price + "\"" +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "{" +
+//                "\"id\":\"" + id + "\"" +
+//                ", \"name\": \"" + name + '\"' +
+//                ", \"quantity\": \"" + quantity + "\"" +
+//                ", \"price\": \"" + price + "\"" +
+//                '}';
+//    }
 }

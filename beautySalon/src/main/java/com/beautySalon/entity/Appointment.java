@@ -29,19 +29,19 @@ public class Appointment {
     private String service;
     private String massage;
 
-    @Override
-    public String toString() {
-        return "{" +
-                "\"id\": \"" + id + "\"" +
-                ", \"firstName\": \"" + firstName + '\"' +
-                ", \"lastName\": \"" + lastName + '\"' +
-                ", \"email\": \"" + email + '\"' +
-                ", \"telNo\": \"" + telNo + '\"' +
-                ", \"day\": \"" + day + "\"" +
-                ", \"month\": \"" + month + "\"" +
-                ", \"year\": \"" + year + "\"" +
-                ", \"service\": \"" + service + '\"' +
-                ", \"massage\": \"" + massage + '\"' +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "{" +
+//                "\"id\": \"" + id + "\"" +
+//                ", \"firstName\": \"" + firstName + '\"' +
+//                ", \"lastName\": \"" + lastName + '\"' +
+//                ", \"email\": \"" + email + '\"' +
+//                ", \"telNo\": \"" + telNo + '\"' +
+//                ", \"day\": \"" + day + "\"" +
+//                ", \"month\": \"" + month + "\"" +
+//                ", \"year\": \"" + year + "\"" +
+//                ", \"service\": \"" + service + '\"' +
+//                ", \"massage\": \"" + massage + '\"' +
+//                '}';
+//    }
 }

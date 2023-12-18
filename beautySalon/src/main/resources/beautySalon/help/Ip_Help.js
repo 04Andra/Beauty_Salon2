@@ -1,0 +1,3 @@
+export const MY_IP = "192.168.1.128"
+
+//linie de comanda => ipconfig => IP...

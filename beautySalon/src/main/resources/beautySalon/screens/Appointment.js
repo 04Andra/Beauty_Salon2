@@ -1,14 +1,101 @@
-import {StyleSheet, Text, View, ImageBackground, TextInput, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, View, ImageBackground, TextInput, TouchableOpacity, Button} from 'react-native';
 import {green} from "../help/Colors";
 import {SelectList} from "react-native-dropdown-select-list/index";
 import React, {useState} from "react";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import UserChoice from "./UserChoice";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import {MY_IP} from "../help/Ip_Help";
+import email from 'react-native-email'
 
-export default function Appointment({navigation}) {
+async function fetchDataAddAppointment(firstName, lastName, emailAddress, telNo, day, month, year, service, massage){
+
+    console.log("---------------1")
+    console.log(firstName, typeof firstName);
+    console.log(lastName, typeof lastName);
+    console.log(emailAddress, typeof emailAddress);
+    console.log(telNo, typeof telNo);
+    console.log(day, typeof day);
+    console.log(month, typeof month);
+    console.log(year, typeof year);
+    console.log(service, typeof service);
+    console.log(massage, typeof massage);
+    console.log("---------------2")
+
+
+
+    const responseJson = await fetch(
+        "http://" + MY_IP + ":8080/addAppointment",
+        {
+            method: "POST",
+            headers: {
+                'Content-Type' : 'application/json'
+            },
+            body: JSON.stringify({
+                "firstName": firstName,
+                "lastName": lastName,
+                "emailAddress": emailAddress,
+                "telNo": telNo,
+                "day": day,
+                "month": month,
+                "year": year,
+                "service": service,
+                "massage": massage
+            })
+        });
+    // return responseJson.json();
+}
+
+const getDate = (data) => {
+    let month = data.toString().substring(4, 7);
+    let day = data.toString().substring(8, 10);
+    let year = data.toString().substring(11, 15);
+    let hour = data.toString().substring(16, 21);
+
+
+    return {
+        "day": day,
+        "month": month == "Jan"? "1":
+                month =="Feb"? "2":
+                month == "Mar"? "3":
+                month == "Apr"? "4":
+                    month =="May"? "5":
+                        month == "Jun"? "6":
+                            month == "Jul"? "7":
+                                month =="Aug"? "8":
+                                    month == "Sep"? "9":
+                                        month == "Oct"? "10":
+                                            month =="Nov"? "11": "12",
+        "year": year,
+        "hour": hour,
+
+    }
+}
+
+const handleEmail = (firstName, lastName, emailAddress, telNo, day, month, year, service, massage) => {
+    const to = "andramalaescu25@yahoo.com" // string or array of email addresses
+    email(to, {
+        // Optional additional arguments
+        // cc: ['bazzy@moo.com', 'doooo@daaa.com'], // string or array of email addresses
+        // bcc: 'mee@mee.com', // string or array of email addresses
+        subject: 'New appointment',
+        body: 'Nume: ' + firstName + '\nOra: ' + lastName + emailAddress + '\nNumarul de telefon: ' + telNo + '\nZiua: ' + day + '\nLuna: ' + month + '\nAnul: ' + year + '\nServiciul: ' + service + '\nMesaj de la client: ' + massage,
+        checkCanOpen: false // Call Linking.canOpenURL prior to Linking.openURL
+    }).catch(console.error)
+}
+
+export default function Appointment({navigation}){
+    const [inputNume, setInputNume] = useState("");
+
+    const [inputTelNumber, setInputTelNumber] = useState("");
+
+    const [inputDataSelected, setInputDataSelected] = useState("");
+
+    const [timeSelected, setTimeSelected] = useState("");
 
     const [selected, setSelected] = useState("");
+
+    const [messageSelected, setMessageSelected] = useState("");
 
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
@@ -21,6 +108,10 @@ export default function Appointment({navigation}) {
     };
 
     const handleDateConfirm = (date) => {
+        setInputDataSelected(date)
+        // getDate(date).day;
+        // getDate(date).month;
+        // getDate(date).year;
         hideDatePicker();
     };
 
@@ -35,6 +126,9 @@ export default function Appointment({navigation}) {
     };
 
     const handleTimeConfirm = (date) => {
+        setTimeSelected(date.toString().substring(16, 21))
+        // console.log(getDate(date));
+        // console.log(getDate(date).hour);
         hideTimePicker();
     };
 
@@ -48,34 +142,38 @@ export default function Appointment({navigation}) {
         {key: '7', value: 'Pedichiura gel'},
     ]
 
-    return (
-        <ImageBackground source={require("../help/images/wp_phone2.png")} resizeMode="cover"
-                         style={appointmentStyles.image}>
-            <View style={appointmentStyles.container1}>
-                <TextInput
-                    autoCapitalize={'none'}
-                    style={appointmentStyles.textInput}
-                    placeholder={'Name'}
-                />
-                <TextInput
-                    autoCapitalize={'none'}
-                    style={appointmentStyles.textInput}
-                    placeholder={'Phone Number'}
-                />
-                <TextInput
-                    autoCapitalize={'none'}
-                    style={appointmentStyles.textInput}
-                    placeholder={'Your email address'}
-                />
-                <SelectList
-                    setSelected={(val) => setSelected(val)}
-                    data={data}
-                    save="value"
-                    placeholder={"Select service"}
-                    searchicon={<AntDesign name={"search1"} size={16} style={appointmentStyles.service}/>}
-                />
+    {
 
-                <View style={appointmentStyles.dateTime}>
+        return (
+            <ImageBackground source={require("../help/images/wp_phone2.png")} resizeMode="cover"
+                             style={appointmentStyles.image}>
+                <View style={appointmentStyles.container1}>
+                    <TextInput
+                        autoCapitalize={'none'}
+                        style={appointmentStyles.textInput}
+                        placeholder={'Name'}
+                        onChangeText={setInputNume}
+                    />
+                    <TextInput
+                        autoCapitalize={'none'}
+                        style={appointmentStyles.textInput}
+                        placeholder={'Phone Number'}
+                        onChangeText={setInputTelNumber}
+                    />
+                    {/*<TextInput*/}
+                    {/*    autoCapitalize={'none'}*/}
+                    {/*    style={appointmentStyles.textInput}*/}
+                    {/*    placeholder={'Your email address'}*/}
+                    {/*/>*/}
+                    <SelectList
+                        setSelected={(val) => setSelected(val)}
+                        data={data}
+                        save="value"
+                        placeholder={"Select service"}
+                        searchicon={<AntDesign name={"search1"} size={16} style={appointmentStyles.service}/>}
+                    />
+
+                    <View style={appointmentStyles.dateTime}>
                         <TouchableOpacity onPress={showDatePicker} style={appointmentStyles.date1}>
                             <Text style={appointmentStyles.buttonText}>Select a date</Text>
                             <Text>
@@ -87,32 +185,52 @@ export default function Appointment({navigation}) {
                                 />
                             </Text>
                         </TouchableOpacity>
-                    <TouchableOpacity onPress={showTimePicker} style={appointmentStyles.date}>
-                        <Text style={appointmentStyles.buttonText}>Select a time</Text>
-                        <Text>
-                            <DateTimePickerModal
-                                isVisible={isTimePickerVisible}
-                                mode="time"
-                                onConfirm={handleTimeConfirm}
-                                onCancel={hideTimePicker}
-                            />
-                        </Text>
+                        <TouchableOpacity onPress={showTimePicker} style={appointmentStyles.date}>
+                            <Text style={appointmentStyles.buttonText}>Select a time</Text>
+                            <Text>
+                                <DateTimePickerModal
+                                    isVisible={isTimePickerVisible}
+                                    mode="time"
+                                    onConfirm={handleTimeConfirm}
+                                    onCancel={hideTimePicker}
+
+                                />
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    <TextInput placeholder={"Do you want to tell us something?"} style={appointmentStyles.textInput2}
+                               onChangeText={setMessageSelected}
+                    />
+                </View>
+
+                <View style={appointmentStyles.container2}>
+                    <TouchableOpacity onPress={() => navigation.navigate(UserChoice)} style={appointmentStyles.button1}>
+                        <Text style={appointmentStyles.buttonText}>back</Text>
+                    </TouchableOpacity>
+
+
+                    <TouchableOpacity style={appointmentStyles.button2} onPress={() => {
+                        if(inputNume !== '' && timeSelected !== '' && inputTelNumber !== '' && inputDataSelected !== '' && selected !== '') {
+                        fetchDataAddAppointment(inputNume, timeSelected, "", inputTelNumber, getDate(inputDataSelected).day,
+                            "12", getDate(inputDataSelected).year, selected, messageSelected, "")
+                            .then()
+                            handleEmail(inputNume, timeSelected, "", inputTelNumber, getDate(inputDataSelected).day,
+                                "12", getDate(inputDataSelected).year, selected, messageSelected, "");
+                        alert("Your appointment has been send!")
+
+                        }else {
+                            alert("All fields need to be completed");
+                        }
+                    }}>
+                        <Text style={appointmentStyles.buttonText}>send</Text>
                     </TouchableOpacity>
                 </View>
 
-                <TextInput placeholder={"Do you want to tell us something?"} style={appointmentStyles.textInput2}/>
-            </View>
+            </ImageBackground>
+        );
+    }
 
-            <View style={appointmentStyles.container2}>
-                <TouchableOpacity onPress={() => navigation.navigate(UserChoice)} style={appointmentStyles.button1}>
-                    <Text style={appointmentStyles.buttonText}>back</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={appointmentStyles.button2}>
-                    <Text style={appointmentStyles.buttonText}>send</Text>
-                </TouchableOpacity>
-            </View>
-        </ImageBackground>
-    );
 }
 
 const appointmentStyles = StyleSheet.create({
@@ -124,6 +242,12 @@ const appointmentStyles = StyleSheet.create({
             '100%',
     }
     ,
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
     container1: {
         flex: 1.3,
         justifyContent:
@@ -239,15 +363,17 @@ const appointmentStyles = StyleSheet.create({
             4,
     },
     dateTime: {
-        flexDirection: 'row',
+        // flexDirection: 'row',
         width: '90%',
         height: '15%',
         // backgroundColor: 'blue',
         justifyContent: 'center',
         alignItems: 'center',
+        marginBottom: 20,
+        marginTop: 15,
     },
     date1: {
-        marginRight: 10,
+        // marginRight: 10,
         backgroundColor: green,
         width:
             '40%',
