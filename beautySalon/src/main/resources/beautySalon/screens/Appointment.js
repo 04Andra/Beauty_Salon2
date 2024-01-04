@@ -1,28 +1,17 @@
 import {StyleSheet, Text, View, ImageBackground, TextInput, TouchableOpacity, Button} from 'react-native';
 import {green} from "../help/Colors";
 import {SelectList} from "react-native-dropdown-select-list/index";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import UserChoice from "./UserChoice";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import {MY_IP} from "../help/Ip_Help";
 import email from 'react-native-email'
+import {fetchDataGetEmployee} from "./ModifyStock";
+import KAppointment from "../components/KAppointment";
+import KService from "../components/KService";
 
 async function fetchDataAddAppointment(firstName, lastName, emailAddress, telNo, day, month, year, service, massage){
-
-    console.log("---------------1")
-    console.log(firstName, typeof firstName);
-    console.log(lastName, typeof lastName);
-    console.log(emailAddress, typeof emailAddress);
-    console.log(telNo, typeof telNo);
-    console.log(day, typeof day);
-    console.log(month, typeof month);
-    console.log(year, typeof year);
-    console.log(service, typeof service);
-    console.log(massage, typeof massage);
-    console.log("---------------2")
-
-
 
     const responseJson = await fetch(
         "http://" + MY_IP + ":8080/addAppointment",
@@ -84,6 +73,7 @@ const handleEmail = (firstName, lastName, emailAddress, telNo, day, month, year,
     }).catch(console.error)
 }
 
+
 export default function Appointment({navigation}){
     const [inputNume, setInputNume] = useState("");
 
@@ -98,6 +88,10 @@ export default function Appointment({navigation}){
     const [messageSelected, setMessageSelected] = useState("");
 
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+
+    const [employeeList, setEmployeeList] = useState([]);
+
+    let addServiceList = [];
 
     const showDatePicker = () => {
         setDatePickerVisibility(true);
@@ -132,17 +126,56 @@ export default function Appointment({navigation}){
         hideTimePicker();
     };
 
-    const data = [
-        {key: '1', value: 'Tuns par scurt'},
-        {key: '2', value: 'Tuns par mediu'},
-        {key: '3', value: 'Tuns par lung'},
-        {key: '4', value: 'Vopsit'},
-        {key: '5', value: 'Suvite'},
-        {key: '6', value: 'Manichiura gel'},
-        {key: '7', value: 'Pedichiura gel'},
-    ]
+    // const data = [
+    //     {key: '1', value: 'Tuns par scurt'},
+    //     {key: '2', value: 'Tuns par mediu'},
+    //     {key: '3', value: 'Tuns par lung'},
+    //     {key: '4', value: 'Vopsit'},
+    //     {key: '5', value: 'Suvite'},
+    //     {key: '6', value: 'Manichiura gel'},
+    //     {key: '7', value: 'Pedichiura gel'},
+    // ]
 
-    {
+
+
+        useEffect(() => {
+            fetchDataGetEmployee().then((response) => {
+                setEmployeeList(response);
+            })
+        }, []);
+
+        // const renderDynamicAppointment = () => {
+        //     return employeeList.map((item) => {
+        //
+        //         return (
+        //             <KService
+        //                 key={item.id}
+        //                 data={item}
+        //
+        //                 serviceName={item.lastName}
+        //             />
+        //         );
+        //     });
+        // };
+
+// function addService () {
+//     fetchDataGetEmployee()
+// }
+function getService () {
+    employeeList.forEach(el => {
+        addServiceList.push(((el.lastName).concat(": ")).concat(el.massage))
+    })
+    return addServiceList
+}
+
+    // function getService () {
+    //     employeeList.forEach(el => {
+    //         let aux = ", "
+    //         el.lastName = el.lastName.concat(aux)
+    //         addServiceList.push(el.lastName.concat(el.massage))
+    //     })
+    //     return addServiceList
+    // }
 
         return (
             <ImageBackground source={require("../help/images/wp_phone2.png")} resizeMode="cover"
@@ -167,11 +200,15 @@ export default function Appointment({navigation}){
                     {/*/>*/}
                     <SelectList
                         setSelected={(val) => setSelected(val)}
-                        data={data}
+                        data={getService()}
                         save="value"
                         placeholder={"Select service"}
                         searchicon={<AntDesign name={"search1"} size={16} style={appointmentStyles.service}/>}
                     />
+
+                    {/*<Button title={"select"} onPress={() => console.log(getService())}/>*/}
+
+                    {/*{renderDynamicAppointment()}*/}
 
                     <View style={appointmentStyles.dateTime}>
                         <TouchableOpacity onPress={showDatePicker} style={appointmentStyles.date1}>
@@ -229,7 +266,7 @@ export default function Appointment({navigation}){
 
             </ImageBackground>
         );
-    }
+
 
 }
 
@@ -338,6 +375,7 @@ const appointmentStyles = StyleSheet.create({
         color: 'white',
         fontSize:
             18,
+        textAlign: 'center'
     }
     ,
     timeSt: {

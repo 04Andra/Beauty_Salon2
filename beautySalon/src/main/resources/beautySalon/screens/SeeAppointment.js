@@ -7,6 +7,7 @@ import KSpacer from "../components/KSpacer";
 import KAppointment from "../components/KAppointment";
 import {MY_IP} from "../help/Ip_Help";
 import KProduct from "../components/KProduct";
+import ModifyStock from "./ModifyStock";
 
 
 async function fetchDataGetAppointment() {
@@ -34,7 +35,7 @@ export default function SeeAppointment({navigation}) {
     }, []);
 
 
-    const renderDynamicAcppointment = () => {
+    const renderDynamicAppointment = () => {
         return appointmentsList.map((item) => {
 
             return (
@@ -67,7 +68,7 @@ export default function SeeAppointment({navigation}) {
 
                     <KSpacer/>
 
-                    {renderDynamicAcppointment()}
+                    {renderDynamicAppointment()}
                 </View>
 
             </ScrollView>
@@ -75,7 +76,7 @@ export default function SeeAppointment({navigation}) {
             <KSpacer height={30}/>
 
             <View style={seeAppointmentStyles.buttons}>
-                <TouchableOpacity onPress={() => navigation.navigate(UserChoice)}
+                <TouchableOpacity onPress={() => navigation.navigate(ModifyStock)}
                                   style={seeAppointmentStyles.button}>
                     <Text style={seeAppointmentStyles.buttonText}>back</Text>
                 </TouchableOpacity>

@@ -3,6 +3,7 @@ import {green} from "../help/Colors";
 import Appointment from "./Appointment";
 import Team from "./Team";
 import SeeAppointment from "./SeeAppointment";
+import ModifyStock from "./ModifyStock";
 
 export default function UserChoice({navigation}) {
     return (
@@ -22,7 +23,7 @@ export default function UserChoice({navigation}) {
                     <Text style={userChoiceStyles.buttonText}>see our team</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => navigation.navigate(SeeAppointment)} style={userChoiceStyles.button}>
+                <TouchableOpacity onPress={() => navigation.navigate(ModifyStock)} style={userChoiceStyles.button}>
                     <Text style={userChoiceStyles.buttonText}>enter as a coworker</Text>
                 </TouchableOpacity>
 

@@ -9,6 +9,7 @@ import Team from "./screens/Team";
 import SeeAppointment from "./screens/SeeAppointment";
 import Stock from "./screens/Stock";
 import Wallet from "./screens/Wallet";
+import ModifyStock from "./screens/ModifyStock";
 
 export default function App() {
     const Stack = createNativeStackNavigator()
@@ -23,6 +24,7 @@ export default function App() {
                 <Stack.Screen options={{headerShown: false}} name="SeeAppointment" component={SeeAppointment}/>
                 <Stack.Screen options={{headerShown: false}} name="Stock" component={Stock}/>
                 <Stack.Screen options={{headerShown: false}} name="Wallet" component={Wallet}/>
+                <Stack.Screen options={{headerShown: false}} name="ModifyStock" component={ModifyStock}/>
 
             </Stack.Navigator>
         </NavigationContainer>
