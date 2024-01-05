@@ -28,6 +28,8 @@ public class Appointment {
     private int year;
     private String service;
     private String massage;
+    private String productName;
+    private double productPrice;
 
 //    @Override
 //    public String toString() {

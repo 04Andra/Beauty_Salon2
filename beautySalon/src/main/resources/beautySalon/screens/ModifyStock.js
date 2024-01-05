@@ -1,49 +1,11 @@
-import {Image, ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
+import {ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import {green} from "../help/Colors";
 import React, {useState} from "react";
 import {MY_IP} from "../help/Ip_Help";
 import SeeAppointment from "./SeeAppointment";
-import Wallet from "./Wallet";
 import UserChoice from "./UserChoice";
-import Stock from "./Stock";
-import AntDesign from "react-native-vector-icons/AntDesign";
-import {SelectList} from "react-native-dropdown-select-list/index";
-import Appointment from "./Appointment";
+import {fetchDataAddEmployee} from "../fetchData/FetchDataEmployee";
 
-async function fetchDataAddEmployee(firstName, service, email, telNo, picURL, massage, wallet){
-
-    const responseJson = await fetch(
-        "http://" + MY_IP + ":8080/addEmployee",
-        {
-            method: "POST",
-            headers: {
-                'Content-Type' : 'application/json'
-            },
-            body: JSON.stringify({
-                "firstName": firstName,
-                "lastName": service,
-                "email": email,
-                "telNo": telNo,
-                "picURL": picURL,
-                "massage": massage,
-                "wallet": wallet
-            })
-        });
-    // return responseJson.json();
-}
-
-export async function fetchDataGetEmployee() {
-    const responseJson = await fetch(
-        "http://" + MY_IP + ":8080/employees",
-        {
-            method: "GET",
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
-    return await responseJson.json();
-}
 
     export default function ModifyStock({navigation}) {
 
@@ -75,7 +37,7 @@ export async function fetchDataGetEmployee() {
                     onChangeText={setInputPrice}
                 />
                 <TouchableOpacity onPress={() => fetchDataAddEmployee("", inputService, "", "", "", inputPrice, "")}
-                                  style={modifyStyles.button}>
+                                  style={modifyStyles.button2}>
                     <Text style={modifyStyles.buttonText}>add service</Text>
                 </TouchableOpacity>
 
@@ -95,7 +57,7 @@ export async function fetchDataGetEmployee() {
 
             <View style={modifyStyles.buttons}>
                 <TouchableOpacity onPress={() => navigation.navigate(UserChoice)}
-                                  style={modifyStyles.button}>
+                                  style={modifyStyles.button2}>
                     <Text style={modifyStyles.buttonText}>back</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => navigation.navigate(SeeAppointment)} style={modifyStyles.button}>
@@ -128,6 +90,21 @@ const modifyStyles = StyleSheet.create({
         justifyContent: 'center',
     },
     button: {
+        backgroundColor: green,
+        width:
+            '35%',
+        height:
+            50,
+        justifyContent:
+            'center',
+        alignItems:
+            'center',
+        borderRadius:
+            4,
+        marginHorizontal: 50,
+    }
+    ,
+    button2: {
         backgroundColor: green,
         width:
             '20%',

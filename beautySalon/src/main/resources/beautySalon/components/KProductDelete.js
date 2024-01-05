@@ -1,13 +1,24 @@
+import {fetchDataDeleteStocks} from "../fetchData/FetchDataStock";
 import {StyleSheet, TouchableOpacity, View, Text} from "react-native";
-import {fetchDataAddStock} from "../fetchData/FetchDataStock";
 import {green} from "../help/Colors";
 
-export default function KProduct({name, price, data}) {
+export default function KProductDelete({name, price, data, navigation}) {
+
+    const handleDelete = async () => {
+        try {
+            await fetchDataDeleteStocks(data.id);
+            navigation.replace('StockAvailable');
+        } catch (error) {
+            console.error('Error deleting product:', error);
+            // Handle error as needed
+        }
+    };
+
     return (
         <View style={KProductStyles.appointment}>
             <Text style={KProductStyles.textApp}>Name: {name} {'\n'}Price: {price}</Text>
-            <TouchableOpacity onPress={() => fetchDataAddStock(data.name, data.price, 0.0)} style={KProductStyles.button}>
-                <Text style={KProductStyles.buttonText}>Add</Text>
+            <TouchableOpacity onPress={handleDelete} style={KProductStyles.button}>
+                <Text style={KProductStyles.buttonText}>Delete</Text>
             </TouchableOpacity>
         </View>
     );

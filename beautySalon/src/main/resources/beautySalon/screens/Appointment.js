@@ -5,35 +5,10 @@ import React, {useEffect, useState} from "react";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import UserChoice from "./UserChoice";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import {MY_IP} from "../help/Ip_Help";
 import email from 'react-native-email'
-import {fetchDataGetEmployee} from "./ModifyStock";
-import KAppointment from "../components/KAppointment";
-import KService from "../components/KService";
+import {fetchDataGetEmployee} from "../fetchData/FetchDataEmployee";
+import {fetchDataAddAppointment} from "../fetchData/FetchDataAppointment";
 
-async function fetchDataAddAppointment(firstName, lastName, emailAddress, telNo, day, month, year, service, massage){
-
-    const responseJson = await fetch(
-        "http://" + MY_IP + ":8080/addAppointment",
-        {
-            method: "POST",
-            headers: {
-                'Content-Type' : 'application/json'
-            },
-            body: JSON.stringify({
-                "firstName": firstName,
-                "lastName": lastName,
-                "emailAddress": emailAddress,
-                "telNo": telNo,
-                "day": day,
-                "month": month,
-                "year": year,
-                "service": service,
-                "massage": massage
-            })
-        });
-    // return responseJson.json();
-}
 
 const getDate = (data) => {
     let month = data.toString().substring(4, 7);
@@ -91,6 +66,10 @@ export default function Appointment({navigation}){
 
     const [employeeList, setEmployeeList] = useState([]);
 
+    const [addPrice, setAddPrice] = useState([]);
+
+    const [addService, setAddService] = useState([]);
+
     let addServiceList = [];
 
     const showDatePicker = () => {
@@ -126,16 +105,6 @@ export default function Appointment({navigation}){
         hideTimePicker();
     };
 
-    // const data = [
-    //     {key: '1', value: 'Tuns par scurt'},
-    //     {key: '2', value: 'Tuns par mediu'},
-    //     {key: '3', value: 'Tuns par lung'},
-    //     {key: '4', value: 'Vopsit'},
-    //     {key: '5', value: 'Suvite'},
-    //     {key: '6', value: 'Manichiura gel'},
-    //     {key: '7', value: 'Pedichiura gel'},
-    // ]
-
 
 
         useEffect(() => {
@@ -144,38 +113,13 @@ export default function Appointment({navigation}){
             })
         }, []);
 
-        // const renderDynamicAppointment = () => {
-        //     return employeeList.map((item) => {
-        //
-        //         return (
-        //             <KService
-        //                 key={item.id}
-        //                 data={item}
-        //
-        //                 serviceName={item.lastName}
-        //             />
-        //         );
-        //     });
-        // };
 
-// function addService () {
-//     fetchDataGetEmployee()
-// }
 function getService () {
     employeeList.forEach(el => {
-        addServiceList.push(((el.lastName).concat(": ")).concat(el.massage))
+        addServiceList.push(((el.lastName).concat(":")).concat(el.massage))
     })
     return addServiceList
 }
-
-    // function getService () {
-    //     employeeList.forEach(el => {
-    //         let aux = ", "
-    //         el.lastName = el.lastName.concat(aux)
-    //         addServiceList.push(el.lastName.concat(el.massage))
-    //     })
-    //     return addServiceList
-    // }
 
         return (
             <ImageBackground source={require("../help/images/wp_phone2.png")} resizeMode="cover"
@@ -248,17 +192,31 @@ function getService () {
 
 
                     <TouchableOpacity style={appointmentStyles.button2} onPress={() => {
+                        // let aux = selected.split(":")[0]
+                        // let aux2 = selected.split(":")[1]
+                        employeeList.forEach(el => {
+                            if (el.lastName === selected.split(":")[0]) {
+                                setAddService(el.lastName)
+                                setAddPrice(el.massage)
+                            }
+                        })
+
+                        // posibil sa fie o greseala la setAddPrice(aux2)
+
+
+
                         if(inputNume !== '' && timeSelected !== '' && inputTelNumber !== '' && inputDataSelected !== '' && selected !== '') {
                         fetchDataAddAppointment(inputNume, timeSelected, "", inputTelNumber, getDate(inputDataSelected).day,
-                            "12", getDate(inputDataSelected).year, selected, messageSelected, "")
+                            "12", getDate(inputDataSelected).year, selected, messageSelected, addService, addPrice)
                             .then()
                             handleEmail(inputNume, timeSelected, "", inputTelNumber, getDate(inputDataSelected).day,
-                                "12", getDate(inputDataSelected).year, selected, messageSelected, "");
+                                "12", getDate(inputDataSelected).year, addService, messageSelected);
                         alert("Your appointment has been send!")
 
                         }else {
                             alert("All fields need to be completed");
                         }
+                        // fetchDataAddEmployee("", selected.split(":")[0], "", "", "", addPrice, "").then(() => console.log("Succeed!"))
                     }}>
                         <Text style={appointmentStyles.buttonText}>send</Text>
                     </TouchableOpacity>
@@ -430,5 +388,5 @@ const appointmentStyles = StyleSheet.create({
     service: {
         fontSize: 12,
         marginEnd: 8,
-    }
+    },
 });

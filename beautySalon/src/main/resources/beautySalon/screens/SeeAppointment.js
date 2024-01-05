@@ -1,27 +1,13 @@
-import {StyleSheet, Text, View, ImageBackground, TouchableOpacity, ScrollView, Button} from 'react-native';
-import UserChoice from "./UserChoice";
+import {StyleSheet, Text, View, ImageBackground, TouchableOpacity, ScrollView} from 'react-native';
 import React, {useEffect, useState} from "react";
 import {green} from "../help/Colors";
 import Stock from "./Stock";
 import KSpacer from "../components/KSpacer";
 import KAppointment from "../components/KAppointment";
 import {MY_IP} from "../help/Ip_Help";
-import KProduct from "../components/KProduct";
 import ModifyStock from "./ModifyStock";
+import {fetchDataGetAppointment} from "../fetchData/FetchDataAppointment";
 
-
-async function fetchDataGetAppointment() {
-    const responseJson = await fetch(
-        "http://" + MY_IP + ":8080/appointments",
-        {
-            method: "GET",
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
-    return await responseJson.json();
-}
 
 
 export default function SeeAppointment({navigation}) {
@@ -45,7 +31,8 @@ export default function SeeAppointment({navigation}) {
 
                     name={item.firstName}
                     number={item.telNo}
-                    service={item.service}
+                    service={item.productName}
+                    price={item.productPrice}
                     date={item.day + "/" + item.month + "/" + item.year}
                     time={item.lastName}
                 />

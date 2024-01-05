@@ -21,11 +21,11 @@ public class Employee {
     private Long id;
 
     private String firstName;
-    private String lastName;
+    private String lastName;    // name of the service
     private String email;
     private String telNo;
     private String picURL;
-    private String massage;
+    private String massage;     // price of the service
     private Double wallet;
 
     @ManyToMany

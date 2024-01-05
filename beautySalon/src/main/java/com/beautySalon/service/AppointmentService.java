@@ -40,6 +40,8 @@ public class AppointmentService {
         existingAppointment.setYear(appointment.getYear());
         existingAppointment.setService(appointment.getService());
         existingAppointment.setMassage(appointment.getMassage());
+        existingAppointment.setProductName(appointment.getProductName());
+        existingAppointment.setProductPrice(appointment.getProductPrice());
 
 
 

@@ -1,84 +1,117 @@
-import {ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {Button, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import KSpacer from "../components/KSpacer";
-import KProduct from "../components/KProduct";
 import {green} from "../help/Colors";
-import React, {useState} from "react";
-import Stock from "./Stock";
+import React, {useEffect, useState} from "react";
+import {fetchDataGetEmployee} from "./ModifyStock";
+import KWalletAppointment from "../components/KWalletAppointment";
+import KWalletStock from "../components/KWalletStock";
+import {fetchDataAddStock, fetchDataGetStock} from "../fetchData/FetchDataStock";
+import StockAvailable from "./StockAvailable";
+import KWalletCalculate from "../components/KWalletCalculate";
+import {fetchDataGetAppointment} from "../fetchData/FetchDataAppointment";
 
-// const [wallet, setWallet] = useState(0);
-//
-// const addMoney = (data) => {
-//     setWallet(wallet + data);
-// };
-//
-// const substractMoney = (data) => {
-//     setWallet(wallet - data);
-// };
 
 export default function Wallet({navigation}) {
+
+    const [serviceList, setServiceList] = useState([]);
+
+    const [stockList, setStockList] = useState([]);
+
+    useEffect(() => {
+        fetchDataGetAppointment().then((response) => {
+            setServiceList(response);
+        })
+    }, []);
+
+    useEffect(() => {
+        fetchDataGetStock().then((response) => {
+            setStockList(response);
+        })
+    }, []);
+
+
+    const renderDynamicService = () => {
+        return serviceList.map((item) => {
+
+            return (
+                <KWalletAppointment
+                    key={item.id}
+                    data={item}
+
+                    name={item.productName}
+                    price={item.productPrice}
+                />
+            );
+        });
+    };
+
+    const renderDynamicStock = () => {
+        return stockList.map((item) => {
+
+            return (
+                <KWalletStock
+                    key={item.id}
+                    data={item}
+
+                    name={item.name}
+                    price={item.price}
+                />
+            );
+        });
+    };
+
+    const calculateTotal = () => {
+
+        let c = 0;
+
+        serviceList.forEach(el => {
+            c = c + el.productPrice
+        })
+
+        stockList.forEach(el => {
+            c = c - el.price
+        })
+
+        return c.toFixed(2);
+    }
+
+
     return (
         <ImageBackground source={require("../help/images/wp_phone.png")} resizeMode="cover"
                          style={walletStyles.image}>
             <ScrollView style={walletStyles.scrollApp}>
+
                 <View style={walletStyles.container1}>
 
                     <View style={walletStyles.container2}>
+
                         <KSpacer height={100}/>
-                        <Text style={walletStyles.money}>$557.89</Text>
+
+
+                        <Text style={walletStyles.money}>$ {calculateTotal()}</Text>
 
                     </View>
 
                     <KSpacer height={100}/>
 
-                    <KProduct name={"ondulator"}
-                              price={"29.99"}
-                              brand={"Babyliss"}
-                    />
-                    <KProduct name={"gel"}
-                              price={"21.99"}
-                              color={"Cupio"}
-                    />
-                    <KProduct name={"Ana Popescu"}
-                              price={"Tuns par scurt"}
-                              color={"15.99"}
-                    />
-                    <KProduct name={"Agata Sirbu"}
-                              price={"Manichiura gel"}
-                              color={"32.99"}
-                    />
-                    <KProduct name={"vopsea"}
-                              price={"19.99"}
-                              color={"Naturalis"}
-                    />
-
-                    <KProduct name={"Irina"}
-                              price={"tuns par mediu"}
-                              color={"31.99"}
-                    />
-                    <KProduct name={"Roxana Gheorghe"}
-                              price={"pedichiura gel"}
-                              color={"31.99"}
-                    />
-
-                    <KProduct name={"eyeliner"}
-                              price={"13.99"}
-                              color={"Mabelline"}
-                    />
-                    <KProduct name={"fond de ten"}
-                              price={"24.99"}
-                              color={"Sephora"}
-                    />
-
-                    <TouchableOpacity onPress={() => navigation.navigate(Stock)}
-                                      style={walletStyles.button}>
-                        <Text style={walletStyles.buttonText}>back</Text>
-                    </TouchableOpacity>
+                    {renderDynamicService()}
+                    {renderDynamicStock()}
 
                     <KSpacer height={50}/>
 
                 </View>
 
             </ScrollView>
+
+            <View style={walletStyles.buttons}>
+                <TouchableOpacity onPress={() => navigation.navigate(StockAvailable)}
+                                  style={walletStyles.button}>
+                    <Text style={walletStyles.buttonText}>back</Text>
+                </TouchableOpacity>
+            </View>
+
+            <KSpacer height={50}/>
+
         </ImageBackground>
     );
 }
@@ -129,5 +162,11 @@ const walletStyles = StyleSheet.create({
         fontSize: 40,
         color: "white",
         fontStyle: 'italic',
+    },
+    buttons: {
+        flex: 0.5,
+        flexDirection: "row",
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });
