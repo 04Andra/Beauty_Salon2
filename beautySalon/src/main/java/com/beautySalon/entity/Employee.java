@@ -20,11 +20,11 @@ public class Employee {
     @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
-    private String firstName;
+    private String firstName;   // name of the employee
     private String lastName;    // name of the service
     private String email;
     private String telNo;
-    private String picURL;
+    private String picURL;      // name of the field
     private String massage;     // price of the service
     private Double wallet;
 

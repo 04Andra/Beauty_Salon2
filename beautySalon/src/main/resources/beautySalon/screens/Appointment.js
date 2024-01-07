@@ -5,7 +5,6 @@ import React, {useEffect, useState} from "react";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import UserChoice from "./UserChoice";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import email from 'react-native-email'
 import {fetchDataGetEmployee} from "../fetchData/FetchDataEmployee";
 import {fetchDataAddAppointment} from "../fetchData/FetchDataAppointment";
 
@@ -19,37 +18,25 @@ const getDate = (data) => {
 
     return {
         "day": day,
-        "month": month == "Jan"? "1":
-                month =="Feb"? "2":
-                month == "Mar"? "3":
-                month == "Apr"? "4":
-                    month =="May"? "5":
-                        month == "Jun"? "6":
-                            month == "Jul"? "7":
-                                month =="Aug"? "8":
-                                    month == "Sep"? "9":
-                                        month == "Oct"? "10":
-                                            month =="Nov"? "11": "12",
+        "month": month == "Jan" ? "1" :
+            month == "Feb" ? "2" :
+                month == "Mar" ? "3" :
+                    month == "Apr" ? "4" :
+                        month == "May" ? "5" :
+                            month == "Jun" ? "6" :
+                                month == "Jul" ? "7" :
+                                    month == "Aug" ? "8" :
+                                        month == "Sep" ? "9" :
+                                            month == "Oct" ? "10" :
+                                                month == "Nov" ? "11" : "12",
         "year": year,
         "hour": hour,
 
     }
 }
 
-const handleEmail = (firstName, lastName, emailAddress, telNo, day, month, year, service, massage) => {
-    const to = "andramalaescu25@yahoo.com" // string or array of email addresses
-    email(to, {
-        // Optional additional arguments
-        // cc: ['bazzy@moo.com', 'doooo@daaa.com'], // string or array of email addresses
-        // bcc: 'mee@mee.com', // string or array of email addresses
-        subject: 'New appointment',
-        body: 'Nume: ' + firstName + '\nOra: ' + lastName + emailAddress + '\nNumarul de telefon: ' + telNo + '\nZiua: ' + day + '\nLuna: ' + month + '\nAnul: ' + year + '\nServiciul: ' + service + '\nMesaj de la client: ' + massage,
-        checkCanOpen: false // Call Linking.canOpenURL prior to Linking.openURL
-    }).catch(console.error)
-}
 
-
-export default function Appointment({navigation}){
+export default function Appointment({navigation}) {
     const [inputNume, setInputNume] = useState("");
 
     const [inputTelNumber, setInputTelNumber] = useState("");
@@ -106,124 +93,106 @@ export default function Appointment({navigation}){
     };
 
 
+    useEffect(() => {
+        fetchDataGetEmployee().then((response) => {
+            setEmployeeList(response);
+        })
+    }, []);
 
-        useEffect(() => {
-            fetchDataGetEmployee().then((response) => {
-                setEmployeeList(response);
-            })
-        }, []);
+
+    function getService() {
+        employeeList.forEach(el => {
+            addServiceList.push(((el.lastName).concat(":")).concat(el.massage))
+        })
+        return addServiceList
+    }
+
+    return (
+        <ImageBackground source={require("../help/images/wp_phone2.png")} resizeMode="cover"
+                         style={appointmentStyles.image}>
+            <View style={appointmentStyles.container1}>
+                <TextInput
+                    autoCapitalize={'none'}
+                    style={appointmentStyles.textInput}
+                    placeholder={'Name'}
+                    onChangeText={setInputNume}
+                />
+                <TextInput
+                    autoCapitalize={'none'}
+                    style={appointmentStyles.textInput}
+                    placeholder={'Phone Number'}
+                    onChangeText={setInputTelNumber}
+                />
+
+                <SelectList
+                    setSelected={(val) => setSelected(val)}
+                    data={getService()}
+                    save="value"
+                    placeholder={"Select service"}
+                    searchicon={<AntDesign name={"search1"} size={16} style={appointmentStyles.service}/>}
+                />
 
 
-function getService () {
-    employeeList.forEach(el => {
-        addServiceList.push(((el.lastName).concat(":")).concat(el.massage))
-    })
-    return addServiceList
-}
+                <View style={appointmentStyles.dateTime}>
+                    <TouchableOpacity onPress={showDatePicker} style={appointmentStyles.date1}>
+                        <Text style={appointmentStyles.buttonText}>Select a date</Text>
+                        <Text>
+                            <DateTimePickerModal
+                                isVisible={isDatePickerVisible}
+                                mode="date"
+                                onConfirm={handleDateConfirm}
+                                onCancel={hideDatePicker}
+                            />
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={showTimePicker} style={appointmentStyles.date}>
+                        <Text style={appointmentStyles.buttonText}>Select a time</Text>
+                        <Text>
+                            <DateTimePickerModal
+                                isVisible={isTimePickerVisible}
+                                mode="time"
+                                onConfirm={handleTimeConfirm}
+                                onCancel={hideTimePicker}
 
-        return (
-            <ImageBackground source={require("../help/images/wp_phone2.png")} resizeMode="cover"
-                             style={appointmentStyles.image}>
-                <View style={appointmentStyles.container1}>
-                    <TextInput
-                        autoCapitalize={'none'}
-                        style={appointmentStyles.textInput}
-                        placeholder={'Name'}
-                        onChangeText={setInputNume}
-                    />
-                    <TextInput
-                        autoCapitalize={'none'}
-                        style={appointmentStyles.textInput}
-                        placeholder={'Phone Number'}
-                        onChangeText={setInputTelNumber}
-                    />
-                    {/*<TextInput*/}
-                    {/*    autoCapitalize={'none'}*/}
-                    {/*    style={appointmentStyles.textInput}*/}
-                    {/*    placeholder={'Your email address'}*/}
-                    {/*/>*/}
-                    <SelectList
-                        setSelected={(val) => setSelected(val)}
-                        data={getService()}
-                        save="value"
-                        placeholder={"Select service"}
-                        searchicon={<AntDesign name={"search1"} size={16} style={appointmentStyles.service}/>}
-                    />
-
-                    {/*<Button title={"select"} onPress={() => console.log(getService())}/>*/}
-
-                    {/*{renderDynamicAppointment()}*/}
-
-                    <View style={appointmentStyles.dateTime}>
-                        <TouchableOpacity onPress={showDatePicker} style={appointmentStyles.date1}>
-                            <Text style={appointmentStyles.buttonText}>Select a date</Text>
-                            <Text>
-                                <DateTimePickerModal
-                                    isVisible={isDatePickerVisible}
-                                    mode="date"
-                                    onConfirm={handleDateConfirm}
-                                    onCancel={hideDatePicker}
-                                />
-                            </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={showTimePicker} style={appointmentStyles.date}>
-                            <Text style={appointmentStyles.buttonText}>Select a time</Text>
-                            <Text>
-                                <DateTimePickerModal
-                                    isVisible={isTimePickerVisible}
-                                    mode="time"
-                                    onConfirm={handleTimeConfirm}
-                                    onCancel={hideTimePicker}
-
-                                />
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-
-                    <TextInput placeholder={"Do you want to tell us something?"} style={appointmentStyles.textInput2}
-                               onChangeText={setMessageSelected}
-                    />
+                            />
+                        </Text>
+                    </TouchableOpacity>
                 </View>
 
-                <View style={appointmentStyles.container2}>
-                    <TouchableOpacity onPress={() => navigation.navigate(UserChoice)} style={appointmentStyles.button1}>
-                        <Text style={appointmentStyles.buttonText}>back</Text>
-                    </TouchableOpacity>
+                <TextInput placeholder={"Do you want to tell us something?"} style={appointmentStyles.textInput2}
+                           onChangeText={setMessageSelected}
+                />
+            </View>
+
+            <View style={appointmentStyles.container2}>
+                <TouchableOpacity onPress={() => navigation.navigate(UserChoice)} style={appointmentStyles.button1}>
+                    <Text style={appointmentStyles.buttonText}>back</Text>
+                </TouchableOpacity>
 
 
-                    <TouchableOpacity style={appointmentStyles.button2} onPress={() => {
-                        // let aux = selected.split(":")[0]
-                        // let aux2 = selected.split(":")[1]
-                        employeeList.forEach(el => {
-                            if (el.lastName === selected.split(":")[0]) {
-                                setAddService(el.lastName)
-                                setAddPrice(el.massage)
-                            }
-                        })
-
-                        // posibil sa fie o greseala la setAddPrice(aux2)
+                <TouchableOpacity style={appointmentStyles.button2} onPress={() => {
+                    employeeList.forEach(el => {
+                        if (el.lastName === selected.split(":")[0]) {
+                            setAddService(el.lastName)
+                            setAddPrice(el.massage)
+                        }
+                    })
 
 
-
-                        if(inputNume !== '' && timeSelected !== '' && inputTelNumber !== '' && inputDataSelected !== '' && selected !== '') {
+                    if (inputNume !== '' && timeSelected !== '' && inputTelNumber !== '' && inputDataSelected !== '' && selected !== '') {
                         fetchDataAddAppointment(inputNume, timeSelected, "", inputTelNumber, getDate(inputDataSelected).day,
                             "12", getDate(inputDataSelected).year, selected, messageSelected, addService, addPrice)
-                            .then()
-                            handleEmail(inputNume, timeSelected, "", inputTelNumber, getDate(inputDataSelected).day,
-                                "12", getDate(inputDataSelected).year, addService, messageSelected);
-                        alert("Your appointment has been send!")
+                            .then(() => alert("Your appointment has been send!"))
+                    } else {
+                        alert("All fields, except message field need to be completed");
+                    }
+                }}>
+                    <Text style={appointmentStyles.buttonText}>send</Text>
+                </TouchableOpacity>
+            </View>
 
-                        }else {
-                            alert("All fields need to be completed");
-                        }
-                        // fetchDataAddEmployee("", selected.split(":")[0], "", "", "", addPrice, "").then(() => console.log("Succeed!"))
-                    }}>
-                        <Text style={appointmentStyles.buttonText}>send</Text>
-                    </TouchableOpacity>
-                </View>
-
-            </ImageBackground>
-        );
+        </ImageBackground>
+    );
 
 
 }
@@ -333,7 +302,7 @@ const appointmentStyles = StyleSheet.create({
         color: 'white',
         fontSize:
             18,
-        textAlign: 'center'
+        textAlign: 'center',
     }
     ,
     timeSt: {
@@ -378,7 +347,7 @@ const appointmentStyles = StyleSheet.create({
         justifyContent:
             'center',
         alignItems:
-            'center',
+            'bottom',
         marginBottom:
             10,
         marginTop: 10,

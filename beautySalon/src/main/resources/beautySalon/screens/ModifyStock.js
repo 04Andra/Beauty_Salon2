@@ -1,28 +1,45 @@
 import {ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import {green} from "../help/Colors";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {MY_IP} from "../help/Ip_Help";
 import SeeAppointment from "./SeeAppointment";
 import UserChoice from "./UserChoice";
-import {fetchDataAddEmployee} from "../fetchData/FetchDataEmployee";
+import {fetchDataAddEmployee, fetchDataGetEmployee, fetchDataUpdateEmployee} from "../fetchData/FetchDataEmployee";
+import KSpacer from "../components/KSpacer";
 
 
-    export default function ModifyStock({navigation}) {
+export default function ModifyStock({navigation}) {
 
-        const [inputPrice, setInputPrice] = useState("");
+    const [employeeList, setEmployeeList] = useState([]);
 
-        const [inputService, setInputService] = useState("");
+    const [inputPrice, setInputPrice] = useState("");
 
-        // function getData (data) {
-        //     fetchDataGetEmployee()
-        // }
+    const [inputService, setInputService] = useState("");
 
+    const [inputNameToChange, setInputNameToChange] = useState("");
+
+    const [inputName, setInputName] = useState("");
+
+    const [inputFieldToChange, setInputFieldToChange] = useState("");
+
+    const [inputField, setInputField] = useState("");
+
+    const [inputID, setInputID] = useState("");
+
+    useEffect(() => {
+        fetchDataGetEmployee().then((response) => {
+            setEmployeeList(response);
+        })
+    }, []);
 
     return (
         <ImageBackground source={require("../help/images/wp_phone2.png")} resizeMode="cover"
                          style={modifyStyles.image}>
 
             <View style={modifyStyles.container1}>
+
+
+                <KSpacer height={50}/>
 
                 <TextInput
                     autoCapitalize={'none'}
@@ -41,17 +58,60 @@ import {fetchDataAddEmployee} from "../fetchData/FetchDataEmployee";
                     <Text style={modifyStyles.buttonText}>add service</Text>
                 </TouchableOpacity>
 
-            </View>
+                <KSpacer height={50}/>
 
-            <View style={modifyStyles.container2}>
+                <TextInput
+                    autoCapitalize={'none'}
+                    style={modifyStyles.textInput}
+                    placeholder={'Your id...'}
+                    onChangeText={setInputID}
+                />
+                <TextInput
+                    autoCapitalize={'none'}
+                    style={modifyStyles.textInput}
+                    placeholder={'Your name...'}
+                    onChangeText={setInputNameToChange}
+                />
+                <TextInput
+                    autoCapitalize={'none'}
+                    style={modifyStyles.textInput}
+                    placeholder={'The field you work in...'}
+                    onChangeText={setInputFieldToChange}
+                />
+                <TextInput
+                    autoCapitalize={'none'}
+                    style={modifyStyles.textInput}
+                    placeholder={'Change your name...'}
+                    onChangeText={setInputName}
+                />
+                <TextInput
+                    autoCapitalize={'none'}
+                    style={modifyStyles.textInput}
+                    placeholder={'Change your field name...'}
+                    onChangeText={setInputField}
+                />
+                <TouchableOpacity onPress={() => {
+                    let contor = 0;
+                    employeeList.forEach(el => {
+                            //console.log('\n' + el.firstName + '\n' + inputNameToChange + '\n\n' + el.picURL+ '\n' + inputFieldToChange + '\n\n' +el.lastName)
+                            if (el.firstName === inputNameToChange && el.picURL === inputFieldToChange && el.lastName === "") {
 
-                {/*<SelectList*/}
-                {/*    setInputService={(val) => setInputService(val)}*/}
-                {/*    data={data}*/}
-                {/*    save="value"*/}
-                {/*    placeholder={"Select service to modify price:"}*/}
-                {/*    searchicon={<AntDesign name={"search1"} size={16} style={appointmentStyles.service}/>}*/}
-                {/*/>*/}
+                                fetchDataUpdateEmployee(inputID, inputName, "", "", "", inputField, "", "").then(() => alert("Change successful!"))
+
+                                contor++;
+                            }
+                        }
+                    )
+                    if (contor === 0) {
+                        alert("Incorrect data!")
+                    }
+                    else {
+                        alert("Correct data!")
+                    }
+                }}
+                                  style={modifyStyles.button2}>
+                    <Text style={modifyStyles.buttonText}>change</Text>
+                </TouchableOpacity>
 
             </View>
 
@@ -78,16 +138,9 @@ const modifyStyles = StyleSheet.create({
     },
     container1: {
         flex: 1,
-        backgroundColor: 'green',
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: 30
-    },
-    container2: {
-        flex: 1,
-        backgroundColor: 'yellow',
-        alignItems: 'center',
-        justifyContent: 'center',
     },
     button: {
         backgroundColor: green,
@@ -131,7 +184,6 @@ const modifyStyles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'red',
     },
     textInput: {
         backgroundColor: 'white',
