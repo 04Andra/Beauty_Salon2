@@ -20,12 +20,12 @@ public class Employee {
     @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
-    private String firstName;   // name of the employee
-    private String lastName;    // name of the service
+    private String employeeName;   // name of the employee (firstName)
+    private String serviceName;    // name of the service (lastName)
     private String email;
     private String telNo;
-    private String picURL;      // name of the field
-    private String massage;     // price of the service
+    private String fieldName;      // name of the field (picURL)
+    private String servicePrice;     // price of the service (massage)
     private Double wallet;
 
     @ManyToMany

@@ -1,6 +1,6 @@
 import {MY_IP} from "../help/Ip_Help";
 
-export async function fetchDataAddEmployee(firstName, service, email, telNo, picURL, massage, wallet){
+export async function fetchDataAddEmployee(employeeName, serviceName, email, telNo, fieldName, servicePrice, wallet){
 
     const responseJson = await fetch(
         "http://" + MY_IP + ":8080/addEmployee",
@@ -10,19 +10,19 @@ export async function fetchDataAddEmployee(firstName, service, email, telNo, pic
                 'Content-Type' : 'application/json'
             },
             body: JSON.stringify({
-                "firstName": firstName,
-                "lastName": service,
+                "employeeName": employeeName,
+                "serviceName": serviceName,
                 "email": email,
                 "telNo": telNo,
-                "picURL": picURL,
-                "massage": massage,
+                "fieldName": fieldName,
+                "servicePrice": servicePrice,
                 "wallet": wallet
             })
         });
     // return responseJson.json();
 }
 
-export async function fetchDataUpdateEmployee(id, firstName, service, email, telNo, picURL, massage, wallet){
+export async function fetchDataUpdateEmployee(id, employeeName, serviceName, email, telNo, fieldName, servicePrice, wallet){
 
     const responseJson = await fetch(
         "http://" + MY_IP + ":8080/addEmployee",
@@ -33,12 +33,12 @@ export async function fetchDataUpdateEmployee(id, firstName, service, email, tel
             },
             body: JSON.stringify({
                 "id": id,
-                "firstName": firstName,
-                "lastName": service,
+                "employeeName": employeeName,
+                "serviceName": serviceName,
                 "email": email,
                 "telNo": telNo,
-                "picURL": picURL,
-                "massage": massage,
+                "fieldName": fieldName,
+                "servicePrice": servicePrice,
                 "wallet": wallet
             })
         });

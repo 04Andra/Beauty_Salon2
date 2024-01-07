@@ -20,7 +20,7 @@ export default function Team({navigation}) {
         let aux
         employeeList.forEach(el => {
             if (el.id === id) {
-                aux = "id: ".concat(String(el.id).concat('\n'.concat(el.firstName.concat('\n'.concat(el.picURL)))))
+                aux = "id: ".concat(String(el.id).concat('\n'.concat(el.employeeName.concat('\n'.concat(el.fieldName)))))
             }
         })
         return aux
@@ -37,7 +37,7 @@ export default function Team({navigation}) {
 
                     <Image source={require("../help/images/user.jpg")} style={teamStyles.image2}/>
 
-                        <Text style={teamStyles.name}>{checkID(11)}</Text>
+                        <Text style={teamStyles.name}>{checkID(18)}</Text>
 
                 </View>
 
@@ -45,7 +45,7 @@ export default function Team({navigation}) {
 
                     <Image source={require("../help/images/user2.jpg")} style={teamStyles.image2}/>
 
-                        <Text style={teamStyles.name}>{checkID(12)}</Text>
+                        <Text style={teamStyles.name}>{checkID(19)}</Text>
 
                 </View>
 
@@ -53,7 +53,7 @@ export default function Team({navigation}) {
 
                     <Image source={require("../help/images/user3.jpg")} style={teamStyles.image2}/>
 
-                        <Text style={teamStyles.name}>{checkID(13)}</Text>
+                        <Text style={teamStyles.name}>{checkID(20)}</Text>
 
                 </View>
 

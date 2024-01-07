@@ -93,8 +93,7 @@ export default function ModifyStock({navigation}) {
                 <TouchableOpacity onPress={() => {
                     let contor = 0;
                     employeeList.forEach(el => {
-                            //console.log('\n' + el.firstName + '\n' + inputNameToChange + '\n\n' + el.picURL+ '\n' + inputFieldToChange + '\n\n' +el.lastName)
-                            if (el.firstName === inputNameToChange && el.picURL === inputFieldToChange && el.lastName === "") {
+                            if (el.employeeName === inputNameToChange && el.fieldName === inputFieldToChange && el.serviceName === "") {
 
                                 fetchDataUpdateEmployee(inputID, inputName, "", "", "", inputField, "", "").then(() => alert("Change successful!"))
 
@@ -104,9 +103,6 @@ export default function ModifyStock({navigation}) {
                     )
                     if (contor === 0) {
                         alert("Incorrect data!")
-                    }
-                    else {
-                        alert("Correct data!")
                     }
                 }}
                                   style={modifyStyles.button2}>

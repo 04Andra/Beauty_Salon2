@@ -6,7 +6,7 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import UserChoice from "./UserChoice";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import {fetchDataGetEmployee} from "../fetchData/FetchDataEmployee";
-import {fetchDataAddAppointment} from "../fetchData/FetchDataAppointment";
+import {fetchDataAddAppointment, fetchDataGetAppointment} from "../fetchData/FetchDataAppointment";
 
 
 const getDate = (data) => {
@@ -53,6 +53,8 @@ export default function Appointment({navigation}) {
 
     const [employeeList, setEmployeeList] = useState([]);
 
+    const [appointmentList, setAppointmentList] = useState([]);
+
     const [addPrice, setAddPrice] = useState([]);
 
     const [addService, setAddService] = useState([]);
@@ -69,9 +71,6 @@ export default function Appointment({navigation}) {
 
     const handleDateConfirm = (date) => {
         setInputDataSelected(date)
-        // getDate(date).day;
-        // getDate(date).month;
-        // getDate(date).year;
         hideDatePicker();
     };
 
@@ -87,8 +86,6 @@ export default function Appointment({navigation}) {
 
     const handleTimeConfirm = (date) => {
         setTimeSelected(date.toString().substring(16, 21))
-        // console.log(getDate(date));
-        // console.log(getDate(date).hour);
         hideTimePicker();
     };
 
@@ -99,10 +96,16 @@ export default function Appointment({navigation}) {
         })
     }, []);
 
+    useEffect(() => {
+        fetchDataGetAppointment().then((response) => {
+            setAppointmentList(response);
+        })
+    }, []);
+
 
     function getService() {
         employeeList.forEach(el => {
-            addServiceList.push(((el.lastName).concat(":")).concat(el.massage))
+            addServiceList.push(((el.serviceName).concat(":")).concat(el.servicePrice))
         })
         return addServiceList
     }
@@ -172,9 +175,9 @@ export default function Appointment({navigation}) {
 
                 <TouchableOpacity style={appointmentStyles.button2} onPress={() => {
                     employeeList.forEach(el => {
-                        if (el.lastName === selected.split(":")[0]) {
-                            setAddService(el.lastName)
-                            setAddPrice(el.massage)
+                        if (el.serviceName === selected.split(":")[0]) {
+                            setAddService(el.serviceName)
+                            setAddPrice(el.servicePrice)
                         }
                     })
 
@@ -184,7 +187,7 @@ export default function Appointment({navigation}) {
                             "12", getDate(inputDataSelected).year, selected, messageSelected, addService, addPrice)
                             .then(() => alert("Your appointment has been send!"))
                     } else {
-                        alert("All fields, except message field need to be completed");
+                        alert("All fields (except message field) need to be completed");
                     }
                 }}>
                     <Text style={appointmentStyles.buttonText}>send</Text>
@@ -218,7 +221,6 @@ const appointmentStyles = StyleSheet.create({
             'flex-end',
         alignItems:
             'center',
-        // backgroundColor: 'yellow',
     }
     ,
     container2: {
@@ -321,33 +323,23 @@ const appointmentStyles = StyleSheet.create({
             'center',
         alignItems:
             'center',
-        // marginBottom:
-        //     10,
-        // marginTop: 10,
         borderRadius:
             4,
     },
     dateTime: {
-        // flexDirection: 'row',
         width: '90%',
         height: '15%',
-        // backgroundColor: 'blue',
         justifyContent: 'center',
         alignItems: 'center',
         marginBottom: 20,
         marginTop: 15,
     },
     date1: {
-        // marginRight: 10,
         backgroundColor: green,
         width:
             '40%',
         height:
             '45%',
-        justifyContent:
-            'center',
-        alignItems:
-            'bottom',
         marginBottom:
             10,
         marginTop: 10,

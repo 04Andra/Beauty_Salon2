@@ -31,13 +31,13 @@ public class EmployeeService {
 
     public Employee updateEmployee(Employee employee) {
         Employee existingEmployee = employeeRepository.findById(employee.getId()).orElse(null);
-        existingEmployee.setFirstName(employee.getFirstName());
-        existingEmployee.setLastName(employee.getLastName());
+        existingEmployee.setEmployeeName(employee.getEmployeeName());
+        existingEmployee.setServiceName(employee.getServiceName());
         existingEmployee.setEmail(employee.getEmail());
         existingEmployee.setTelNo(employee.getTelNo());
-        existingEmployee.setPicURL(employee.getPicURL());
+        existingEmployee.setFieldName(employee.getFieldName());
         existingEmployee.setWallet(employee.getWallet());
-        existingEmployee.setMassage(employee.getMassage());
+        existingEmployee.setServicePrice(employee.getServicePrice());
         existingEmployee.setMyStock(employee.getMyStock());
         existingEmployee.setAppointmentList(employee.getAppointmentList());
 
